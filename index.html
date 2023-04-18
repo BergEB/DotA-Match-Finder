@@ -13,9 +13,11 @@
 
 </head>
 
-<body class="bg-gray-900 text-white flex justify-center items-center h-screen">
 
-    <form id="searchForm" class="bg-gray-700 p-9 rounded-lg shadow-md">
+
+<body class="bg-gray-900 text-white flex justify-center items-center h-screen">
+  <div class="flex flex-col justify-center items-center">
+    <form id="searchForm" class="bg-gray-700 p-9 rounded-lg shadow-md mb-4">
       
       <div class="mb-4">
         <label class="block text-white font-bold mb-2" for="search">DotA Player Search</label>
@@ -27,9 +29,16 @@
         </button>
       </div>
       </form>
+       
+      <form id="infoForm" class="bg-gray-700 p-9 rounded-lg shadow-md hidden">
+        <div id="info" class="flex flex-col justify-center items-center">
+          <div id="steamID" class="mb-4"></div>
+          <div id="gameName" class="mb-4"></div>
+          <div id="profURL"></div>
+        </div>
+      </form>
 
-<div id="hi"></div>
-    
+
     </body>
     <script src="./assets/js/script.js"></script>
 
