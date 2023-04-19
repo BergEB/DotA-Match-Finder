@@ -22,23 +22,23 @@ buttonSubmit.addEventListener("click", function (event) {
       // removes info page
       infoForm.classList.remove("hidden");
 
-
+// info page
 document.getElementById('steamID').innerText = data.response.players[0].steamid;
 document.getElementById('gameName').innerText = data.response.players[0].personaname;
 document.getElementById('profURL').innerText = data.response.players[0].profileurl;
 
-
-// display_image(data.response.players[0].avatarfull);
+// displays Steam avatar
+display_image(data.response.players[0].avatarfull);
     });
-  //  document.getElementById('searchForm').reset();
+document.getElementById('userSearch').reset();
 })
 
-/*
 function display_image(img) {
-  document.querySelector(".fact").src = img;
-  document.querySelector(".fact").style.visibility = "visible";
- } */
+  document.querySelector(".icon").src = img;
+document.querySelector("#Avatar").style.visibility = "visible";
+ };
+
  
 
-
-var accountID = 'http://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v1/?key=2827282DAF3A52E64919024532E0EBE1&account_id=';
+/*
+var accountID = 'http://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v1/?key=2827282DAF3A52E64919024532E0EBE1&account_id='; */
