@@ -2,14 +2,51 @@
 <html lang="en">
 
 <head>
+    <title> DotA-Match-Finder </title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./assets/style/style.css">
+
+
 </head>
 
-<body>
+
+
+<body class="bg-gray-900 text-white flex justify-center items-center h-screen">
+  <div class="flex flex-col justify-center items-center">
+    <form id="searchForm" class="bg-gray-700 p-9 rounded-lg shadow-md mb-4">
+      
+      <div class="mb-4">
+        <label class="block text-white font-bold mb-2" for="search">DotA Player Search</label>
+        <input id="userID" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" placeholder="Enter Username">
+      </div>
+      <div class="flex justify-center">
+        <button id="userSearch" class="bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+          Search
+        </button>
+      </div>
+      </form>
+       
+      <form id="infoForm" class="bg-gray-700 p-9 rounded-lg shadow-md hidden">
+        <div id="info" class="flex flex-col justify-center items-center">
+          <div id="icon" class="mb-4">
+            <img class="icon" src="" alt="User avatar">
+          </div>
+          <label class="block text-white font-bold mb-2" for="search">Steam ID</label>
+          <div id="steamID" class="mb-4"></div>
+          <label class="block text-white font-bold mb-2" for="search">Game Profile Name</label>
+          <div id="gameName" class="mb-4"></div>
+          <label class="block text-white font-bold mb-2" for="search">URL</label>
+          <div id="profURL"></div>
+        </div>
+      </form>
+
+
+    </body>
     <script src="./assets/js/script.js"></script>
-</body>
+
 
 </html>
