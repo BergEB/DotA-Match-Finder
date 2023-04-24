@@ -9,7 +9,6 @@ const gameList = document.getElementById('game-list');
 //hides the info page
 infoForm.classList.add("hidden");
 
-
 buttonSubmit.addEventListener("click", function (event) {
   event.preventDefault();
 
@@ -32,6 +31,7 @@ buttonSubmit.addEventListener("click", function (event) {
 
       // displays Steam avatar
       display_image(data.response.players[0].avatarfull);
+
     });
 });
 
@@ -40,20 +40,24 @@ function display_image(img) {
 };
 
 // displays game list
-const searchForm = document.getElementById('searchForm');
-searchForm.addEventListener('submit', event => {
+
+buttonSubmit.addEventListener("click", function (event) {
   event.preventDefault();
-  fetch(`https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=E73AF6D8FF004CC1716E3F08C637D90C&steamid=&include_appinfo=1`)
-    .then(response => response.json())
-    .then(data => {
-      gameList.innerHTML = '';
-      for (let i = 0; i < 5 && i < data.response.games.length; i++) {
-        const game = data.response.games[i];
-        const gameName = game.name;
-        const listItem = document.createElement('li');
-        listItem.textContent = gameName;
-        gameList.appendChild(listItem);
-      }
-    })
-    .catch(error => console.log(error));
+  const searchForm = document.getElementById('searchForm');
+  searchForm.addEventListener('submit', event => {
+    event.preventDefault();
+    fetch(`https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=E73AF6D8FF004CC1716E3F08C637D90C&steamid=&include_appinfo=1`)
+      .then(response => response.json())
+      .then(data => {
+        gameList.innerHTML = '';
+        for (let i = 0; i < 5 && i < data.response.games.length; i++) {
+          const game = data.response.games[i];
+          const gameName = game.name;
+          const listItem = document.createElement('li');
+          listItem.textContent = gameName;
+          gameList.appendChild(listItem);
+        }
+      })
+      .catch(error => console.log(error));
+  });
 });
