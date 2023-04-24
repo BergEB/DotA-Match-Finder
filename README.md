@@ -20,7 +20,7 @@ https://bergeb.github.io/DotA-Match-Finder/
 
 # Screenshot
 
-<img src="./assets/image/screenshot.png" width="500" height="500"> 
+<img src="./assets/image/Screenshot.png" width="500" height="500"> 
 
 # Credits
 Erik Berg
