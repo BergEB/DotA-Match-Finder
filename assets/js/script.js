@@ -4,9 +4,12 @@ const SteamIDConverter = { BASE_NUM: bigInt("76561197960265728"), REGEX_STEAMID6
 const buttonSubmit = document.getElementById('userSearch');
 const infoForm = document.getElementById("infoForm");
 const steamIDApi = 'https://cors-proxy4.p.rapidapi.com/?url=https%3A%2F%2Fapi.steampowered.com%2FISteamUser%2FGetPlayerSummaries%2Fv2%2F%3Fkey%3D2827282DAF3A52E64919024532E0EBE1%26steamids%3D';
+const resolveVanityURL = 'https://cors-proxy4.p.rapidapi.com/?url=api.steampowered.com%2FISteamUser%2FResolveVanityURL%2Fv0001%2F%3Fkey%3D2827282DAF3A52E64919024532E0EBE1%26vanityurl%3D';
 const gameID = 'https://cors-proxy4.p.rapidapi.com/?url=https%3A%2F%2Fapi.steampowered.com%2FIPlayerService%2FGetOwnedGames%2Fv0001%2F%3Fkey%3DE73AF6D8FF004CC1716E3F08C637D90C%26steamid%3D%26include_appinfo%3D1';
 const matches = 'https://cors-proxy4.p.rapidapi.com/?url=http%3A%2F%2Fapi.steampowered.com%2FIDOTA2Match_570%2FGetMatchHistory%2Fv1%2F%3Fkey%3D2827282DAF3A52E64919024532E0EBE1%26account_id%3D'
 const matchInfo = 'https://cors-proxy4.p.rapidapi.com/?url=https%3A%2F%2Fapi.opendota.com%2Fapi%2Fmatches%2F';
+const heroInfo = 'https://cors-proxy4.p.rapidapi.com/?url=https%3A%2F%2Fapi.opendota.com%2Fapi%2Fheroes%3F';
+const heroJSON = JSON.parse(localStorage.getItem('heroData'));
 const openDotaApiKey = '%3Fapi_key%3D23bf869d-aa4c-4723-9039-0bd08f46b75e';
 
 const apiGameKey = 'E73AF6D8FF004CC1716E3F08C637D90C';
@@ -22,12 +25,19 @@ const options = {
 
 //hides the info page
 infoForm.classList.add("hidden");
+//gets hero data to local storage for id matching
+async function getHeroData() {
+  const response = await fetch(heroInfo + openDotaApiKey, options);
+  const json = await response.json();
+  localStorage.setItem('heroData', JSON.stringify(json));
+}
+getHeroData();
 
 
 buttonSubmit.addEventListener("click", function (event) {
   event.preventDefault();
 
-  const steamUserID = document.getElementById('userID').value;
+  let steamUserID = document.getElementById('userID').value;
 
   fetch(steamIDApi + steamUserID + gameID, options)
     .then(function (response) {
@@ -58,7 +68,13 @@ buttonSubmit.addEventListener("click", function (event) {
     .then(function (data) {
       for (let i = 0; i < 5; i++) {
         // adds 5 most recent matchIDs to matchID array
-        matchID.push(data.result.matches[i].match_id)
+        try {
+          matchID.push(data.result.matches[i].match_id)
+        }
+        catch(TypeError) {
+          document.getElementById('gameList1').innerText = 'NO RECENT MATCHES'
+          return;
+        }
         document.getElementById('gameList' + (i + 1)).innerText = matchID[i];
         // populates match info
         fetch(matchInfo + matchID[i] + openDotaApiKey, options)
@@ -67,12 +83,39 @@ buttonSubmit.addEventListener("click", function (event) {
           })
           .then(function (data) {
             let playerNumber = -1;
+            let heroName = -1;
             // Loop limit is max player count (10)
             for (let k = 0; k < 10; k++) {
               // looks for a matching steam32 id to input id to find player[] index
               if (data.players[k].account_id == (SteamIDConverter.toSteamID3(steamUserID).slice(5, length - 1))) {
                 playerNumber = k;
-                document.getElementById('gameList' + (i + 1)).innerText = "Kills: " + data.players[k].kills + "\nLast Hits: " + data.players[k].last_hits + "\nNet Worth: " + data.players[k].net_worth;
+                for (let l = 0; l < heroJSON.length; l++) {
+                  if (data.players[k].hero_id == heroJSON[l].id) {
+                    heroName = heroJSON[l].localized_name;
+                  }
+                }
+                function teamCheck() {
+                  if (data.players[k].isRadiant) {
+                    return "Radiant";
+                  } else {
+                    return "Dire";
+                  }
+                }
+
+                function winCheck() {
+                  if (data.players[k].win == 1) {
+                    return "Win";
+                  }
+                  else {
+                    return "Loss";
+                  }
+                }
+                let date = new Date(data.start_time * 1000)
+                document.getElementById('gameList' + (i + 1)).innerText = "\n" + date.toString() +
+                  "\nTeam: " + teamCheck() + "\t" + winCheck() + " Score: " + data.radiant_score + "/" + data.dire_score +
+                  "\nKDA: " + data.players[k].kills + "/" + data.players[k].deaths + "/" + data.players[k].assists + "\tHero: " + heroName +
+                  "\nDamage Dealt: " + data.players[k].hero_damage + "\tHealing: " + data.players[k].hero_healing +
+                  "\nLast Hits: " + data.players[k].last_hits + "\tNet Worth: " + data.players[k].net_worth;
                 break;
               }
             }
@@ -80,6 +123,23 @@ buttonSubmit.addEventListener("click", function (event) {
       }
     });
 });
+
+// function teamCheck() {
+//   if (data.players[k].isRadiant) {
+//     return "Radiant";
+//   } else {
+//     return "Dire";
+//   }
+// }
+
+// function winCheck() {
+//   if (data.players[k].win == 1) {
+//     return "Win";
+//   }
+//   else {
+//     return "Loss";
+//   }
+// }
 
 
 function display_image(img) {
