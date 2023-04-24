@@ -68,7 +68,13 @@ buttonSubmit.addEventListener("click", function (event) {
     .then(function (data) {
       for (let i = 0; i < 5; i++) {
         // adds 5 most recent matchIDs to matchID array
-        matchID.push(data.result.matches[i].match_id)
+        try {
+          matchID.push(data.result.matches[i].match_id)
+        }
+        catch(TypeError) {
+          document.getElementById('gameList1').innerText = 'NO RECENT MATCHES'
+          return;
+        }
         document.getElementById('gameList' + (i + 1)).innerText = matchID[i];
         // populates match info
         fetch(matchInfo + matchID[i] + openDotaApiKey, options)
@@ -95,7 +101,7 @@ buttonSubmit.addEventListener("click", function (event) {
                     return "Dire";
                   }
                 }
-                
+
                 function winCheck() {
                   if (data.players[k].win == 1) {
                     return "Win";
@@ -106,9 +112,7 @@ buttonSubmit.addEventListener("click", function (event) {
                 }
                 let date = new Date(data.start_time * 1000)
                 document.getElementById('gameList' + (i + 1)).innerText = "\n" + date.toString() +
-                  "\nTeam: " + 
-                  teamCheck() 
-                  + "\t" + winCheck() + " Score: " + data.radiant_score + "/" + data.dire_score +
+                  "\nTeam: " + teamCheck() + "\t" + winCheck() + " Score: " + data.radiant_score + "/" + data.dire_score +
                   "\nKDA: " + data.players[k].kills + "/" + data.players[k].deaths + "/" + data.players[k].assists + "\tHero: " + heroName +
                   "\nDamage Dealt: " + data.players[k].hero_damage + "\tHealing: " + data.players[k].hero_healing +
                   "\nLast Hits: " + data.players[k].last_hits + "\tNet Worth: " + data.players[k].net_worth;
